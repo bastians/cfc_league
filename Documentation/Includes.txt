@@ -1,0 +1,37 @@
+.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
+
+.. This is 'Includes.txt'. It is included at the very top of each and
+   every ReST source file in this documentation project (= manual).
+
+
+.. ==================================================
+.. DEFINE SOME TEXT ROLES
+.. --------------------------------------------------
+
+.. role::   typoscript(code)
+
+.. role::   ts(typoscript)
+   :class:  typoscript
+
+.. role::   php(code)
+
+.. highlight:: php
+
+.. |img-screenshot-matchManagement|      image:: /Images/Screenshots/matchManagement.png
+.. :border: 0
+.. :align: left
+
+.. |img-screenshot-matchTicker|      image:: /Images/Screenshots/matchTicker.png
+.. :border: 0
+.. :align: left
+
+.. |img-screenshot-playerCreation|      image:: /Images/Screenshots/playerCreation.png
+.. :border: 0
+.. :align: left
+
+.. |img-screenshot-personSearch|      image:: /Images/Screenshots/personSearch.png
+.. :border: 0
+.. :align: left
