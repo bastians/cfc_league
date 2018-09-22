@@ -35,3 +35,7 @@
 .. |img-screenshot-personSearch|      image:: /Images/Screenshots/personSearch.png
 .. :border: 0
 .. :align: left
+
+.. |img-UsersManual-databaseModell|      image:: /Images/UsersManual/Introduction/databaseModell.png
+.. :border: 0
+.. :align: left
