@@ -10,12 +10,11 @@ Common Tasks
 
 .. only:: html
 
-	This chapter gives you a basic introduction about the TYPO3 CMS extension "*cfc_league*".
+	Common Tasks
+	------------
 
 .. toctree::
 	:maxdepth: 5
 	:titlesonly:
 
-	About/Index
-	Sponsors/Index
-	Screenshots/Index
+	WithoutPlay/Index

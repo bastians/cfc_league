@@ -35,3 +35,11 @@
 .. |img-screenshot-personSearch|      image:: /Images/Screenshots/personSearch.png
 .. :border: 0
 .. :align: left
+
+.. |img-screenshot-withoutPlay-01|      image:: /Images/CommonTasks/WithoutPlay/withoutPlay-01.png
+.. :border: 0
+.. :align: left
+
+.. |img-screenshot-withoutPlay-02|      image:: /Images/CommonTasks/WithoutPlay/withoutPlay-02.png
+.. :border: 0
+.. :align: left
