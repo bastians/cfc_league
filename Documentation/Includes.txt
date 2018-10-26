@@ -20,19 +20,19 @@
 
 .. highlight:: php
 
-.. |img-screenshot-matchManagement|      image:: /Images/Screenshots/matchManagement.png
+.. |img-screenshot-matchManagement|      image:: /Images/Introduction/Screenshots/matchManagement.png
 .. :border: 0
 .. :align: left
 
-.. |img-screenshot-matchTicker|      image:: /Images/Screenshots/matchTicker.png
+.. |img-screenshot-matchTicker|      image:: /Images/Introduction/Screenshots/matchTicker.png
 .. :border: 0
 .. :align: left
 
-.. |img-screenshot-playerCreation|      image:: /Images/Screenshots/playerCreation.png
+.. |img-screenshot-playerCreation|      image:: /Images/Introduction/Screenshots/playerCreation.png
 .. :border: 0
 .. :align: left
 
-.. |img-screenshot-personSearch|      image:: /Images/Screenshots/personSearch.png
+.. |img-screenshot-personSearch|      image:: /Images/Introduction/Screenshots/personSearch.png
 .. :border: 0
 .. :align: left
 
