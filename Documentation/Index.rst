@@ -9,28 +9,28 @@
 .. _start:
 
 =============================================================
-News system
+T3SPORTS-Backend (cfc_league)
 =============================================================
 
 .. only:: html
 
 	:Classification:
-		news
+		sportsmanagement
 
 	:Version:
 		|release|
 
 	:Language:
-		en
+		de
 
 	:Keywords:
-		news
+		sports, sportsmanagement
 
 	:Copyright:
-		2015
+		2018
 
 	:Author:
-		Georg Ringer
+		René Nitzsche
 
 	:License:
 		This document is published under the Open Content License
@@ -52,7 +52,9 @@ News system
 
 	Introduction/Index
 	UsersManual/Index
-	AdministratorManual/Index
-	DeveloperManual/Index
+	CommonTasks/Index
+	Administation/Index
+	Configuration/Index
 	Tutorials/Index
-	Misc/Index
+	KnownProblems/Index
+	Changelog/Index
