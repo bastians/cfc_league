@@ -53,7 +53,7 @@ T3SPORTS-Backend (cfc_league)
 	Introduction/Index
 	UsersManual/Index
 	CommonTasks/Index
-	Administation/Index
+	Administration/Index
 	Configuration/Index
 	Tutorials/Index
 	KnownProblems/Index

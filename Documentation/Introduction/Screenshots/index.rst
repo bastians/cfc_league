@@ -18,13 +18,17 @@ Die nachfolgenden Screenshots zeigen einige Eingabemasken des Backendmoduls. Die
 * Personen suchen
 
 |img-screenshot-matchManagement|
-Illustration 1: Ergebnisverwaltung. Die wichtigsten Spieldaten können hier aktualisiert werden.
+
+*Illustration 1: Ergebnisverwaltung. Die wichtigsten Spieldaten können hier aktualisiert werden.*
 
 |img-screenshot-matchTicker|
-Illustration 2: Eingabemaske des Spieltickers. Bis zu drei Meldungen können parallel abgesetzt werden.
+
+*Illustration 2: Eingabemaske des Spieltickers. Bis zu drei Meldungen können parallel abgesetzt werden.*
 
 |img-screenshot-playerCreation|
-Illustration 3: Spieler anlegen. In dieser Maske werden Spieler anlegt und gleichzeitig dem eingestellten Team zugeordnet.
+
+*Illustration 3: Spieler anlegen. In dieser Maske werden Spieler anlegt und gleichzeitig dem eingestellten Team zugeordnet.*
 
 |img-screenshot-personSearch|
-Illustration 4: Personen suchen: Man erhält einen schnellen Überblick über vorhandene Spieler.
+
+*Illustration 4: Personen suchen: Man erhält einen schnellen Überblick über vorhandene Spieler.*

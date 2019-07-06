@@ -3,6 +3,8 @@
 .. --------------------------------------------------
 .. -*- coding: utf-8 -*- with BOM.
 
+.. include:: ../Includes.txt
+
 .. _commonTasks:
 
 Common Tasks
