@@ -1,10 +1,11 @@
-﻿.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
+﻿.. every .rst file should include Includes.txt
+.. use correct path!
 
 .. include:: Includes.txt
 
+
+.. Every manual should have a start label for cross-referencing to
+.. start page. Do not remove this!
 
 .. _start:
 
@@ -12,49 +13,60 @@
 T3SPORTS-Backend (cfc_league)
 =============================================================
 
-.. only:: html
+:Version:
+   |release|
 
-	:Classification:
-		sportsmanagement
+:Language:
+   de
 
-	:Version:
-		|release|
+:Authors:
+   René Nitzsche
 
-	:Language:
-		de
+:Email:
+   rene@system25.de
 
-	:Keywords:
-		sports, sportsmanagement
+:License:
+   This extension documentation is published under the
+   `CC BY-NC-SA 4.0 <https://creativecommons.org/licenses/by-nc-sa/4.0/>`__ (Creative Commons)
+   license
 
-	:Copyright:
-		2018
+{extension.description}
 
-	:Author:
-		René Nitzsche
+**TYPO3**
 
-	:License:
-		This document is published under the Open Content License
-		available from http://www.opencontent.org/opl.shtml
+   The content of this document is related to TYPO3 CMS,
+   a GNU/GPL CMS/Framework available from `typo3.org
+   <https://typo3.org/>`_ .
 
-	:Rendered:
-		|today|
+**Community Documentation:**
 
-	The content of this document is related to TYPO3,
-	a GNU/GPL CMS/Framework available from `www.typo3.org <http://www.typo3.org/>`_.
+   This documentation is community documentation for the TYPO3 extension {extension.name}
+
+   It is maintained as part of this third party extension.
+
+   If you find an error or something is missing, please:
+   `Report a Problem <https://github.com/TYPO3-Documentation/TYPO3CMS-Example-ExtensionManual/issues/new>`__
+
+**Extension Manual**
+
+   This documentation is for the TYPO3 extension <extkey>.
 
 
-	**Table of Contents**
+**For Contributors**
+
+   You are welcome to help improve this guide. Just click on "Edit me on GitHub"
+   on the top right to submit your change request.
+
 
 .. toctree::
-	:maxdepth: 3
-	:titlesonly:
-	:glob:
+   :maxdepth: 3
+   :hidden:
 
-	Introduction/Index
-	UsersManual/Index
-	CommonTasks/Index
-	Administration/Index
-	Configuration/Index
-	Tutorials/Index
-	KnownProblems/Index
-	Changelog/Index
+   Introduction/Index
+   UsersManual/Index
+   CommonTasks/Index
+   Administration/Index
+   Configuration/Index
+   Tutorials/Index
+   KnownProblems/Index
+   Changelog/Index
