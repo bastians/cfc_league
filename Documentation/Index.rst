@@ -66,6 +66,7 @@ T3SPORTS-Backend (cfc_league)
    Introduction/Index
    Editor/Index
    Administration/Index
+   Developer/Index
    Tutorials/Index
    KnownProblems/Index
    Changelog/Index
