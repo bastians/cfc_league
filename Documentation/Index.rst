@@ -59,14 +59,14 @@ T3SPORTS-Backend (cfc_league)
 
 
 .. toctree::
-   :maxdepth: 3
    :glob:
+   :maxdepth: 2
    :hidden:
 
    Introduction/Index
    Editor/Index
    Administration/Index
    Developer/Index
-   Tutorials/Index
+   Tutorial/Index
    KnownProblems/Index
    Changelog/Index
