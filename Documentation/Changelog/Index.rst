@@ -1,12 +1,8 @@
-.. ==================================================
-.. FOR YOUR INFORMATION
-.. --------------------------------------------------
-.. -*- coding: utf-8 -*- with BOM.
-
 .. include:: ../Includes.txt
 
 .. _changelog:
 
+=========
 Changelog
 =========
 
@@ -86,7 +82,7 @@ v0.8.2 (21.12.2011) (not released)
 
 * New field in competition for sports selection
 * Avoid t3lib_SpriteManager for TYPO4 4.3 and older
-* TCA config for point_system changed from radio to select, since radio can’t handle itemsprocfunc.
+* TCA config for point_system changed from radio to select, since radio can’t handle itemsprocfunc
 * tx_cfcleague_search_Match: ignore deleted and hidden competitions and teams
 
 v0.8.1 (17.10.2010)
