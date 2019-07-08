@@ -5,11 +5,10 @@
 Installation
 ============
 
-Die Installation erfolgt wie gewohnt über den Extension Manager. Für den Betrieb der Extension sind die folgenden Extensions notwendig:
+Die Installation erfolgt wie gewohnt über den Extension Manager. Für den Betrieb der Extension ist die folgende Extension notwendig:
 
 * rn_base
-* dam
-* rn_memento
+* DAM (optional bei älteren Installationen)
 
 Der Extension Manager von TYPO3 weist ggf. auf fehlende oder nicht aktuelle Extensions hin. Diesen Hinweisen sollte man immer nachkommen. Andernfalls kann es zu schwerwiegenden Problemen kommen. Bis hin zu dem Zustand, dass keine Anmeldung im TYPO3 BE mehr möglich ist!
 
