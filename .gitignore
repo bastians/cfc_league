@@ -1,3 +1,15 @@
 .settings
 .buildpath
 .project
+
+*.DS_Store
+/vendor
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.DS_Store
+.editorconfig
+Thumbs.db
