@@ -185,7 +185,59 @@ class Synchronizer
         $data[self::TABLE_GAMES][$matchUid]['home'] = $this->findTeam($structure->getHome($matchData), $data, $competition, $info);
         $data[self::TABLE_GAMES][$matchUid]['guest'] = $this->findTeam($structure->getGuest($matchData), $data, $competition, $info);
 
+        // Ergebnis und Status werden nur gesetzt, wenn sie in der Datei enthalten sind.
+        // Sonst würden manuell gepflegte Ergebnisse überschrieben.
+        $result = $structure->getResult($matchData);
+        if (null !== $result) {
+            $data[self::TABLE_GAMES][$matchUid] = array_merge(
+                $data[self::TABLE_GAMES][$matchUid],
+                $this->buildResultData($competition, $result, $structure->getHalftimeResult($matchData))
+            );
+        }
+        $status = $structure->getStatus($matchData);
+        if (null !== $status) {
+            $data[self::TABLE_GAMES][$matchUid]['status'] = $status;
+        }
+
         return true;
+    }
+
+    /**
+     * Verteilt End- und Halbzeitergebnis auf die Spielabschnitte des Wettbewerbs.
+     *
+     * @param Competition $competition
+     * @param int[] $result [home, guest]
+     * @param int[]|null $halftime [home, guest]
+     *
+     * @return array
+     */
+    protected function buildResultData(Competition $competition, array $result, ?array $halftime)
+    {
+        $matchParts = $competition->getMatchParts();
+        $resultData = [];
+        for ($i = 1; $i <= $matchParts; ++$i) {
+            $resultData['goals_home_'.$i] = 0;
+            $resultData['goals_guest_'.$i] = 0;
+        }
+        // Halbzeitergebnis ist nur bei mehreren Spielabschnitten sinnvoll
+        $hasHalftime = null !== $halftime && $matchParts > 1;
+        if ($hasHalftime) {
+            $resultData['goals_home_1'] = $halftime[0];
+            $resultData['goals_guest_1'] = $halftime[1];
+        }
+
+        if ($competition->isAddPartResults()) {
+            // Die Teilergebnisse werden addiert. Der Rest kommt in den zweiten Abschnitt.
+            $part = $hasHalftime ? 2 : 1;
+            $resultData['goals_home_'.$part] = $result[0] - ($hasHalftime ? $halftime[0] : 0);
+            $resultData['goals_guest_'.$part] = $result[1] - ($hasHalftime ? $halftime[1] : 0);
+        } else {
+            // Das Endergebnis steht im letzten Abschnitt
+            $resultData['goals_home_'.$matchParts] = $result[0];
+            $resultData['goals_guest_'.$matchParts] = $result[1];
+        }
+
+        return $resultData;
     }
 
     protected function findTeam($extTeam, array &$data, Competition $competition, array &$info)

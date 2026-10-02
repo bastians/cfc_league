@@ -156,8 +156,8 @@
                 <target>Funktionsweise</target>
             </trans-unit>
             <trans-unit id="label_dfbsync_info" xml:space="preserve">
-                <source>This function creates and updates match fixtures for a competition based on exports files (CSV) of DFB.</source>
-                <target>Dieses Modul erstellt und aktualisiert Spielpläne auf Basis von CSV-Dateien aus dem DFBnet.</target>
+                <source>This function creates and updates match fixtures for a competition based on exports files (CSV) of DFB. Results can be imported with the optional columns "Ergebnis" (e.g. 2:1 or 2:1 (1:0)), "Halbzeit" (e.g. 1:0) and "Spielstatus" (0=scheduled, 1=running, 2=finished, -1=invalid, -10=rescheduled or the corresponding text). Matches with a result and without status are set to finished.</source>
+                <target>Dieses Modul erstellt und aktualisiert Spielpläne auf Basis von CSV-Dateien aus dem DFBnet. Ergebnisse können über die optionalen Spalten "Ergebnis" (z.B. 2:1 oder 2:1 (1:0)), "Halbzeit" (z.B. 1:0) und "Spielstatus" (0=angesetzt, 1=läuft, 2=beendet, -1=ungültig, -10=verlegt oder der entsprechende Text) importiert werden. Spiele mit Ergebnis und ohne Status werden auf beendet gesetzt.</target>
             </trans-unit>
             <trans-unit id="label_dfbsync_nokeyfound" xml:space="preserve">
                 <source>Current competition has no external key configured. 

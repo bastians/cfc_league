@@ -118,7 +118,7 @@
                 <source>What does it do?</source>
             </trans-unit>
             <trans-unit id="label_dfbsync_info" xml:space="preserve">
-                <source>This function creates and updates match fixtures for a competition based on exports files (CSV) of DFB.</source>
+                <source>This function creates and updates match fixtures for a competition based on exports files (CSV) of DFB. Results can be imported with the optional columns "Ergebnis" (e.g. 2:1 or 2:1 (1:0)), "Halbzeit" (e.g. 1:0) and "Spielstatus" (0=scheduled, 1=running, 2=finished, -1=invalid, -10=rescheduled or the corresponding text). Matches with a result and without status are set to finished.</source>
             </trans-unit>
             <trans-unit id="label_dfbsync_nokeyfound" xml:space="preserve">
                 <source>Current competition has no external key configured. 

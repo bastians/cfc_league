@@ -91,6 +91,47 @@ class CsvStructure
 
     public const COL_POSTPONE_TIME = 'verlegtUhrzeit';
 
+    /** Endergebnis, z.B. "2:1" oder "2:1 (1:0)" */
+    public const COL_RESULT = 'Ergebnis';
+
+    /** Halbzeitergebnis, z.B. "1:0" */
+    public const COL_RESULT_HALFTIME = 'Halbzeit';
+
+    /** Spielstatus, entweder numerisch (TCA-Wert) oder als Text */
+    public const COL_STATUS = 'Spielstatus';
+
+    public const STATUS_SCHEDULED = 0;
+
+    public const STATUS_RUNNING = 1;
+
+    public const STATUS_FINISHED = 2;
+
+    public const STATUS_INVALID = -1;
+
+    public const STATUS_RESCHEDULED = -10;
+
+    /** Textwerte für den Spielstatus. Key ist der Text in Kleinbuchstaben. */
+    private const STATUS_MAP = [
+        'geplant' => self::STATUS_SCHEDULED,
+        'angesetzt' => self::STATUS_SCHEDULED,
+        'scheduled' => self::STATUS_SCHEDULED,
+        'läuft' => self::STATUS_RUNNING,
+        'laeuft' => self::STATUS_RUNNING,
+        'live' => self::STATUS_RUNNING,
+        'running' => self::STATUS_RUNNING,
+        'beendet' => self::STATUS_FINISHED,
+        'abgeschlossen' => self::STATUS_FINISHED,
+        'gespielt' => self::STATUS_FINISHED,
+        'finished' => self::STATUS_FINISHED,
+        'ungültig' => self::STATUS_INVALID,
+        'ungueltig' => self::STATUS_INVALID,
+        'abgesagt' => self::STATUS_INVALID,
+        'annulliert' => self::STATUS_INVALID,
+        'invalid' => self::STATUS_INVALID,
+        'verlegt' => self::STATUS_RESCHEDULED,
+        'rescheduled' => self::STATUS_RESCHEDULED,
+    ];
+
     /** Spalte in CSV-Datei */
     public const DATA_COL = 'data_col';
 
@@ -117,9 +158,13 @@ class CsvStructure
             self::COL_LEAGUE_IDENT => $this->createColData(),
             self::COL_POSTPONE_DATE => $this->createColData(),
             self::COL_POSTPONE_TIME => $this->createColData(),
+            self::COL_RESULT => $this->createColData(false),
+            self::COL_RESULT_HALFTIME => $this->createColData(false),
+            self::COL_STATUS => $this->createColData(false),
         ];
         foreach ($this->structure as $field => $data) {
-            if ($idx = array_search($field, $headers)) {
+            $idx = array_search($field, $headers);
+            if (false !== $idx) {
                 $this->structure[$field][self::DATA_COL] = $idx;
             }
         }
@@ -168,9 +213,85 @@ class CsvStructure
         return $date->getTimestamp();
     }
 
+    /**
+     * Liefert das Endergebnis des Spiels. Ist in der Spalte auch das Halbzeitergebnis
+     * in Klammern enthalten, z.B. "2:1 (1:0)", dann wird nur das Endergebnis geliefert.
+     *
+     * @return int[]|null [home, guest] or null if no result is set
+     */
+    public function getResult(array $line): ?array
+    {
+        $results = $this->parseResults($this->getData($line, $this->structure[self::COL_RESULT][self::DATA_COL]));
+
+        return $results[0] ?? null;
+    }
+
+    /**
+     * Liefert das Halbzeitergebnis des Spiels. Wenn keine eigene Spalte vorhanden ist,
+     * wird das Ergebnis in Klammern aus der Spalte für das Endergebnis verwendet.
+     *
+     * @return int[]|null [home, guest] or null if no result is set
+     */
+    public function getHalftimeResult(array $line): ?array
+    {
+        $results = $this->parseResults($this->getData($line, $this->structure[self::COL_RESULT_HALFTIME][self::DATA_COL]));
+        if (!empty($results)) {
+            return $results[0];
+        }
+        $results = $this->parseResults($this->getData($line, $this->structure[self::COL_RESULT][self::DATA_COL]));
+
+        return $results[1] ?? null;
+    }
+
+    /**
+     * Liefert den Spielstatus. Wenn kein Status gesetzt ist, aber ein Endergebnis vorliegt,
+     * dann wird das Spiel als beendet betrachtet.
+     *
+     * @return int|null the status value or null if status is unknown
+     */
+    public function getStatus(array $line): ?int
+    {
+        $status = trim((string) $this->getData($line, $this->structure[self::COL_STATUS][self::DATA_COL]));
+        if ('' !== $status) {
+            if (preg_match('/^-?\d+$/', $status)) {
+                return (int) $status;
+            }
+            $status = mb_strtolower($status);
+            if (array_key_exists($status, self::STATUS_MAP)) {
+                return self::STATUS_MAP[$status];
+            }
+        }
+
+        return null !== $this->getResult($line) ? self::STATUS_FINISHED : null;
+    }
+
+    /**
+     * Findet alle Ergebnisse der Form "2:1" oder "2-1" in einem String.
+     *
+     * @return int[][]
+     */
+    protected function parseResults($value): array
+    {
+        $results = [];
+        if (null === $value || '' === trim((string) $value)) {
+            return $results;
+        }
+        if (preg_match_all('/(\d+)\s*[:\-]\s*(\d+)/', (string) $value, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $match) {
+                $results[] = [(int) $match[1], (int) $match[2]];
+            }
+        }
+
+        return $results;
+    }
+
     protected function getData($line, $col)
     {
-        return $line[$col];
+        if (null === $col) {
+            return null;
+        }
+
+        return $line[$col] ?? null;
     }
 
     protected function createColData($required = true)
