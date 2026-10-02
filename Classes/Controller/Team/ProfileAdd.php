@@ -12,6 +12,7 @@ use Sys25\RnBase\Utility\T3General;
 use System25\T3sports\Model\Team;
 use System25\T3sports\Module\Searcher\ProfileSearcher;
 use System25\T3sports\Module\Utility\TeamInfo;
+use System25\T3sports\Module\Utility\TeamPositionNotes;
 use System25\T3sports\Utility\Misc;
 use tx_rnbase;
 
@@ -49,6 +50,11 @@ class ProfileAdd
     public $mod;
 
     /**
+     * @var TeamPositionNotes
+     */
+    private $positionNotes;
+
+    /**
      * Ausführung des Requests.
      * Das Team muss bekannt sein.
      *
@@ -61,6 +67,7 @@ class ProfileAdd
     public function handleRequest($module, Team $currTeam, TeamInfo $teamInfo)
     {
         $this->mod = $module;
+        $this->positionNotes = tx_rnbase::makeInstance(TeamPositionNotes::class);
 
         if ($teamInfo->isTeamFull()) {
             // Kann nix mehr angelegt werden
@@ -100,21 +107,19 @@ class ProfileAdd
     protected function showAddProfiles(Team $currTeam, TeamInfo $teamInfo)
     {
         $lang = $this->mod->getLanguageService();
+        // Personen, die schon im Team sind, können trotzdem ausgewählt werden, da sie eine
+        // weitere Funktion im Team übernehmen können (z.B. Spieler und Trainer). Doppelte
+        // Zuordnungen in der gleichen Funktion werden beim Speichern verhindert.
         $options = [
             'checkbox' => 1,
         ];
-
-        // Todo: wir müssen wissen, welche Teil des Teams selectiert ist
-        $profiles = $currTeam->getPlayers();
-        foreach ($profiles as $profile) {
-            $options['dontcheck'][$profile->getUid()] = $lang->getLL('msg_profile_already_joined');
-        }
 
         $searcher = $this->getProfileSearcher($options);
         $tableForm = '<div style="margin-top:10px">'.$searcher->getSearchForm().'</div>';
         $tableForm .= $searcher->getResultList();
         if ($searcher->getSize()) {
             $tableForm .= $this->getFormTool()->createSelectByArray('profileType', '', ProfileCreate::getProfileTypeArray($lang));
+            $tableForm .= $this->getPositionInput('profilePosition');
             // Button für Zuordnung
             $tableForm .= $this->getFormTool()->createSubmit(
                 'profile2team',
@@ -138,6 +143,24 @@ class ProfileAdd
     }
 
     /**
+     * Eingabefeld für die Position bzw. Funktion im Team. Wird nur angezeigt,
+     * wenn ein passender Notiz-Typ vorhanden ist.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function getPositionInput($name)
+    {
+        if (!$this->positionNotes->isAvailable()) {
+            return '';
+        }
+        $lang = $this->mod->getLanguageService();
+
+        return ' '.$lang->getLL('label_team_position').': '.$this->getFormTool()->createTxtInput($name, '', 15).' ';
+    }
+
+    /**
      * Blendet ein kleines Formular für die Neuanlage einer Person ein.
      */
     protected function getCreateForm()
@@ -154,7 +177,6 @@ class ProfileAdd
                 $lang->getLL('label_firstname'),
                 $lang->getLL('label_lastname'),
                 '&nbsp;',
-                '&nbsp;',
             ],
         ];
         $row = [];
@@ -162,6 +184,11 @@ class ProfileAdd
         $row[] = $this->getFormTool()->createTxtInput('data[tx_cfcleague_profiles][NEW'.$i.'][first_name]', '', 10);
         $row[] = $this->getFormTool()->createTxtInput('data[tx_cfcleague_profiles][NEW'.$i.'][last_name]', '', 10);
         $row[] = $this->getFormTool()->createSelectByArray('data[tx_cfcleague_profiles][NEW'.$i.'][type]', '', ProfileCreate::getProfileTypeArray($lang));
+        if ($this->positionNotes->isAvailable()) {
+            $arr[0][] = $lang->getLL('label_team_position');
+            $row[] = $this->getFormTool()->createTxtInput('newProfilePosition', '', 10);
+        }
+        $arr[0][] = '&nbsp;';
         $row[] = $this->getFormTool()->createSubmit('newprofile2team', $lang->getLL('btn_create'), $lang->getLL('msg_CreateProfiles')).$this->getFormTool()->createHidden('data[tx_cfcleague_profiles][NEW'.$i.'][pid]', $this->mod->getPid());
         $arr[] = $row;
         $tables = tx_rnbase::makeInstance(Tables::class);
@@ -195,7 +222,7 @@ class ProfileAdd
             'tx_cfcleague_profiles' => $request['tx_cfcleague_profiles'],
         ];
 
-        $out = ProfileCreate::createProfiles($profiles, $currTeam, $teamInfo, $this->mod->getDoc());
+        $out = ProfileCreate::createProfiles($profiles, $currTeam, $teamInfo, $this->mod->getDoc(), (string) T3General::_GP('newProfilePosition'));
 
         return $out;
     }
@@ -231,28 +258,57 @@ class ProfileAdd
                 $out = $lang->getLL('msg_no_profile_selected').'<br/><br/>';
             } else {
                 $type = (int) T3General::_GP('profileType');
-                if (1 == $type) {
-                    if ($teamInfo->get('freePlayers') < count($entryUids)) {
-                        // Team ist schon voll
-                        $out = $lang->getLL('msg_maxPlayers').'<br/><br/>';
-                    } else {
-                        // Die Spieler hinzufügen
-                        $this->addProfiles2Team($currTeam, 'players', $entryUids);
-                        $out .= $lang->getLL('msg_profiles_joined').'<br/><br/>';
-                    }
-                } elseif (2 == $type) {
-                    // Die Trainer hinzufügen
-                    $this->addProfiles2Team($currTeam, 'coaches', $entryUids);
-                    $out .= $lang->getLL('msg_profiles_joined').'<br/><br/>';
+                $profileCol = self::getProfileColumn($type);
+                // Nur Personen übernehmen, die noch nicht in dieser Funktion im Team sind
+                $existingUids = Strings::intExplode(',', $currTeam->getProperty($profileCol));
+                $newUids = array_values(array_diff(array_map('intval', $entryUids), $existingUids));
+                if (count($newUids) < count($entryUids)) {
+                    $out .= $lang->getLL('msg_profile_already_joined_type').'<br/><br/>';
+                }
+                if (empty($newUids)) {
+                    // Nichts zu tun
+                } elseif ($teamInfo->get(self::getFreeSlotKey($type)) < count($newUids)) {
+                    // Team ist schon voll
+                    $out .= $lang->getLL(self::getMaxMessageKey($type)).'<br/><br/>';
                 } else {
-                    // Die Trainer hinzufügen
-                    $this->addProfiles2Team($currTeam, 'supporters', $entryUids);
+                    $this->addProfiles2Team($currTeam, $profileCol, $newUids);
                     $out .= $lang->getLL('msg_profiles_joined').'<br/><br/>';
                 }
+                // Die Position im Team gilt für alle ausgewählten Personen, die jetzt im Team sind
+                $memberUids = array_intersect(array_map('intval', $entryUids), TeamPositionNotes::getMemberUids($currTeam));
+                $this->positionNotes->setPosition($currTeam, $memberUids, (string) T3General::_GP('profilePosition'));
             }
         }
 
         return (strlen($out)) ? $this->mod->getDoc()->section($lang->getLL('message').':', $out, 0, 1, IModFunc::ICON_INFO) : '';
+    }
+
+    /**
+     * Liefert die Spalte im Team für den Personentyp.
+     *
+     * @param int $type 1 = Spieler, 2 = Trainer, 3 = Betreuer
+     *
+     * @return string
+     */
+    public static function getProfileColumn($type)
+    {
+        $columns = [1 => 'players', 2 => 'coaches'];
+
+        return $columns[(int) $type] ?? 'supporters';
+    }
+
+    private static function getFreeSlotKey($type)
+    {
+        $keys = [1 => 'freePlayers', 2 => 'freeCoaches'];
+
+        return $keys[(int) $type] ?? 'freeSupporters';
+    }
+
+    private static function getMaxMessageKey($type)
+    {
+        $keys = [1 => 'msg_maxPlayers', 2 => 'msg_maxCoaches'];
+
+        return $keys[(int) $type] ?? 'msg_maxSupporters';
     }
 
     /**

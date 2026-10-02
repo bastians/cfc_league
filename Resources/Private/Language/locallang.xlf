@@ -293,6 +293,15 @@
             <trans-unit id="msg_checkPage" xml:space="preserve">
                 <source>Profiles will be created on page: </source>
             </trans-unit>
+            <trans-unit id="msg_maxCoaches" xml:space="preserve">
+                <source>Team contains maximum number of coaches!</source>
+            </trans-unit>
+            <trans-unit id="msg_maxSupporters" xml:space="preserve">
+                <source>Team contains maximum number of supporters!</source>
+            </trans-unit>
+            <trans-unit id="msg_profile_already_joined_type" xml:space="preserve">
+                <source>Some selected profiles already have this function in the team and were skipped.</source>
+            </trans-unit>
             <trans-unit id="msg_maxPlayers" xml:space="preserve">
                 <source>Team contains maximum number of players!</source>
             </trans-unit>
@@ -445,6 +454,9 @@
             </trans-unit>
             <trans-unit id="label_name" xml:space="preserve">
                 <source>Name</source>
+            </trans-unit>
+            <trans-unit id="label_team_position" xml:space="preserve">
+                <source>Position/Function in team</source>
             </trans-unit>
             <trans-unit id="label_profile_coach" xml:space="preserve">
                 <source>Coach</source>

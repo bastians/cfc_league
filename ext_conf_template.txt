@@ -6,3 +6,6 @@ useGlobalClubs = 1
 
   # cat=basic; type=boolean; label= Sort order of clubs by city name: If you enable this, the clubs in club selection will be ordered by city name first.
 clubOrdering = 1
+
+  # cat=basic; type=int; label= UID of team note type for position: The position/function of a person in a team is stored as team note of this type. If 0, the note type with marker "POSITION" is used.
+positionNoteType = 0

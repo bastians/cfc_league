@@ -391,6 +391,18 @@
                 <source>Profiles will be created on page: </source>
                 <target>Alle Spieler werden auf folgender Seite angelegt: </target>
             </trans-unit>
+            <trans-unit id="msg_maxCoaches" xml:space="preserve">
+                <source>Team contains maximum number of coaches!</source>
+                <target>Das Team hat bereits die maximale Anzahl an Trainern!</target>
+            </trans-unit>
+            <trans-unit id="msg_maxSupporters" xml:space="preserve">
+                <source>Team contains maximum number of supporters!</source>
+                <target>Das Team hat bereits die maximale Anzahl an Betreuern!</target>
+            </trans-unit>
+            <trans-unit id="msg_profile_already_joined_type" xml:space="preserve">
+                <source>Some selected profiles already have this function in the team and were skipped.</source>
+                <target>Einige ausgewählte Personen haben diese Funktion bereits im Team und wurden übersprungen.</target>
+            </trans-unit>
             <trans-unit id="msg_maxPlayers" xml:space="preserve">
                 <source>Team contains maximum number of players!</source>
                 <target>Es können keine Profile mehr angelegt werden, da die maximale Anzahl erreicht ist!</target>
@@ -594,6 +606,10 @@
             <trans-unit id="label_name" xml:space="preserve">
                 <source>Name</source>
                 <target/>
+            </trans-unit>
+            <trans-unit id="label_team_position" xml:space="preserve">
+                <source>Position/Function in team</source>
+                <target>Position/Funktion im Team</target>
             </trans-unit>
             <trans-unit id="label_profile_coach" xml:space="preserve">
                 <source>Coach</source>

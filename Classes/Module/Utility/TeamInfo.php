@@ -68,8 +68,8 @@ class TeamInfo
         $this->baseInfo['maxSupporters'] = intval($TCA['tx_cfcleague_teams']['columns']['supporters']['config']['maxitems']);
 
         $this->baseInfo['freePlayers'] = $this->baseInfo['maxPlayers'] - $this->getPlayerSize();
-        $this->baseInfo['freeCoaches'] = $this->baseInfo['maxCoaches'] - $this->getPlayerSize();
-        $this->baseInfo['freeSupporters'] = $this->baseInfo['maxSupporters'] - $this->getPlayerSize();
+        $this->baseInfo['freeCoaches'] = $this->baseInfo['maxCoaches'] - $this->getCoachSize();
+        $this->baseInfo['freeSupporters'] = $this->baseInfo['maxSupporters'] - $this->getSupporterSize();
     }
 
     public function refresh()
@@ -153,14 +153,19 @@ class TeamInfo
                 '&nbsp;',
                 '###LABEL_FIRSTNAME###',
                 '###LABEL_LASTNAME###',
+                '###LABEL_TEAM_POSITION###',
                 '&nbsp;',
                 '&nbsp;',
             ],
         ];
 
-        $this->addProfiles($arr, $this->getCoachNames($this->getTeam()), '###LABEL_PROFILE_COACH###', 'coach');
-        $this->addProfiles($arr, $this->getPlayerNames($this->getTeam()), '###LABEL_PROFILE_PLAYER###', 'player');
-        $this->addProfiles($arr, $this->getSupporterNames($this->getTeam()), '###LABEL_PROFILE_SUPPORTER###', 'supporter');
+        /** @var TeamPositionNotes $positionNotes */
+        $positionNotes = tx_rnbase::makeInstance(TeamPositionNotes::class);
+        $positions = $positionNotes->getPositions($this->getTeam());
+
+        $this->addProfiles($arr, $this->getCoachNames($this->getTeam()), '###LABEL_PROFILE_COACH###', 'coach', $positions);
+        $this->addProfiles($arr, $this->getPlayerNames($this->getTeam()), '###LABEL_PROFILE_PLAYER###', 'player', $positions);
+        $this->addProfiles($arr, $this->getSupporterNames($this->getTeam()), '###LABEL_PROFILE_SUPPORTER###', 'supporter', $positions);
 
         $tables = tx_rnbase::makeInstance(Tables::class);
         $tableProfiles = count($arr) > 1 ? $tables->buildTable($arr) : '';
@@ -213,8 +218,9 @@ class TeamInfo
      * @param array $arr
      * @param array $profiles
      * @param string $label
+     * @param string[] $positions Position im Team, key ist die UID der Person
      */
-    private function addProfiles(&$arr, $profileNames, $label, $type)
+    private function addProfiles(&$arr, $profileNames, $label, $type, array $positions = [])
     {
         $lang = $this->getFormTool()->getLanguageService();
         $i = 1;
@@ -227,12 +233,14 @@ class TeamInfo
                         '',
                         '',
                         '',
+                        '',
                     ]; // Leere Zeile als Trenner;
                 }
                 $row = [];
                 $row[] = 1 == $i++ ? $label : '';
                 $row[] = $prof['first_name'];
                 $row[] = $prof['last_name'];
+                $row[] = htmlspecialchars($positions[$uid] ?? '');
                 $row[] = $this->getFormTool()->createEditLink('tx_cfcleague_profiles', $uid);
                 $row[] = $this->getFormTool()->createSubmit(
                     'remFromTeam['.$type.']',

@@ -15,6 +15,7 @@ use Sys25\RnBase\Utility\Strings;
 use Sys25\RnBase\Utility\T3General;
 use System25\T3sports\Model\Team;
 use System25\T3sports\Module\Utility\TeamInfo;
+use System25\T3sports\Module\Utility\TeamPositionNotes;
 use System25\T3sports\Utility\Misc;
 use tx_rnbase;
 
@@ -211,13 +212,15 @@ class ProfileCreate
      * @param array $profiles Array mit den Daten aus dem Request
      * @param Team $team das aktuelle Team, dem die Personen zugeordnet werden
      * @param TeamInfo $teamInfo
+     * @param string $position Position bzw. Funktion der neuen Personen in diesem Team
      */
-    public static function createProfiles($profiles, Team $team, TeamInfo $teamInfo, DocumentTemplate $doc)
+    public static function createProfiles($profiles, Team $team, TeamInfo $teamInfo, DocumentTemplate $doc, $position = '')
     {
         global $LANG;
 
         $maxCoaches = $teamInfo->get('maxCoaches');
         $maxPlayers = $teamInfo->get('maxPlayers');
+        $maxSupporters = $teamInfo->get('maxSupporters');
         $profiles = $profiles['tx_cfcleague_profiles'];
         $content = '';
 
@@ -240,6 +243,8 @@ class ProfileCreate
                 if ('1' == $type && (($teamInfo->getPlayerSize() + count($playerIds)) >= $maxPlayers)) { // Spieler
                     $warnings[] = $profile['last_name'].', '.$profile['first_name'];
                 } elseif ('2' == $type && (($teamInfo->getCoachSize() + count($coachIds)) >= $maxCoaches)) { // Trainer
+                    $warnings[] = $profile['last_name'].', '.$profile['first_name'];
+                } elseif ('3' == $type && (($teamInfo->getSupporterSize() + count($supportIds)) >= $maxSupporters)) { // Betreuer
                     $warnings[] = $profile['last_name'].', '.$profile['first_name'];
                 } else {
                     $profile['summary'] = '';
@@ -280,6 +285,15 @@ class ProfileCreate
                 $doc->showFlashMessage('msg_tce_errors', DocumentTemplate::STATE_ERROR, 'Error');
             } else {
                 $doc->showFlashMessage('msg_profiles_created', DocumentTemplate::STATE_DEFAULT);
+                if (strlen(trim((string) $position))) {
+                    $newUids = [];
+                    foreach (array_merge($playerIds, $coachIds, $supportIds) as $newId) {
+                        if (isset($tce->substNEWwithIDs[$newId])) {
+                            $newUids[] = (int) $tce->substNEWwithIDs[$newId];
+                        }
+                    }
+                    tx_rnbase::makeInstance(TeamPositionNotes::class)->setPosition($team, $newUids, (string) $position);
+                }
             }
         } else {
             $doc->showFlashMessage('msg_no_person_found', DocumentTemplate::STATE_NOTICE);
